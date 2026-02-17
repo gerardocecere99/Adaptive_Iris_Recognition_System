@@ -1,8 +1,22 @@
 %% SEGMENTAZIONE, NORMALIZZAZIONE ED ENCODING SU TUTTO IL DATASET
 clc; clear; close all;
 
-% Scelta metodo (1 = Hough, 2 = Daugman)
-SCELTA_METODO = 1; 
+% --- MENU DI SCELTA METODO ---
+choice = questdlg('Quale metodo di segmentazione vuoi usare?', ...
+	'Selezione Metodo', ...
+	'Hough', 'Daugman', 'Annulla', 'Hough');
+
+% Gestione della risposta
+switch choice
+    case 'Hough'
+        SCELTA_METODO = 1;
+    case 'Daugman'
+        SCELTA_METODO = 2;
+    otherwise
+     
+        disp('Operazione annullata dall''utente.');
+        return; 
+end
 
 % Dimensioni iride normalizzata
 h_out = 64; 
@@ -74,7 +88,7 @@ img_roi_denoised = img_denoised(r_min:r_max, c_min:c_max);
             [c_pupil, r_pupil, c_iris, r_iris] = segmentazione_hough(img_roi_denoised); 
         else
             % Chiama la funzione Active
-            %[cp, rp, ci, ri, ok] = segmentazione_active(img_red, c_min, r_min);
+            [c_pupil, r_pupil, c_iris, r_iris] = segmentazione_daugman(img_roi_denoised);
         end
 
 % Conversione coordinate        
@@ -85,8 +99,7 @@ c_iris_global = c_iris + [c_min-1, r_min-1];
 [img_norm] = normalizza_iride(img_red, c_pupil_global, r_pupil, c_iris_global, r_iris, h_out, w_out);
 iris_code = encode_iris(img_norm);
 
-% Salvataggio risultato
-% Immagini Segmentazione, Normalizzazione ed Encoding
+% Visualizzazione immagini Segmentazione, Normalizzazione ed Encoding
 % Segmentazione
 f = figure('visible', 'off'); 
 subplot(3,1,1); imshow(img_red); hold on; title(fname, 'Interpreter', 'none');
@@ -106,15 +119,14 @@ subplot(3,1,3); imshow(iris_code); title({'Encoding Iride', ''});
 ylabel('Bit (Reale / Immaginario)');
 xlabel('Fase');
 axis on; 
-
-saveas(f, fullfile(out_dir_img, ['Report_' fname '.jpg']));
  
-% Salvataggio dati (c_pupil_global, r_pupil, c_iris_global, r_iris)
+% Salvataggio immagini e dati (iris_code, c_pupil_global, r_pupil, c_iris_global, r_iris)
+saveas(f, fullfile(out_dir_img, ['Report_' fname '.jpg']));
 [~, nameNoExt, ~] = fileparts(fname);
 matFileName = fullfile(out_dir_data, [nameNoExt '.mat']);
 save(matFileName, 'iris_code', 'c_pupil_global', 'r_pupil', 'c_iris_global', 'r_iris', 'fname');
 close(f);
-        
+       
 end
 
 close(hWait);
