@@ -22,11 +22,22 @@ for k = 1:nFiles
     templates{k} = loaded.iris_code;
     names{k} = loaded.fname;
 
-    % Estrae la persona
-    tokens = split(files(k).name, '_'); 
-    classStr = tokens{1}; 
-    % Estrae il numero dopo la 'C'
-    ids(k) = str2double(classStr(2:end)); 
+    %% --- MODIFICA: ESTRAZIONE ID ROBUSTA ---
+    % Funziona sia per "C1_S1..." che per "001_1_1..."
+    % Estrae il primo gruppo di numeri trovato nel nome del file
+    fname = files(k).name;
+    
+    % Usa espressione regolare per trovare cifre consecutive
+    numStr = regexp(fname, '\d+', 'match'); 
+    
+    if ~isempty(numStr)
+        % Il primo numero trovato è l'ID della persona
+        ids(k) = str2double(numStr{1});
+    else
+        % Se non trova numeri, assegna un ID univoco fittizio o NaN
+        warning(['Impossibile estrarre ID da: ' fname]);
+        ids(k) = NaN; 
+    end 
 end
 
 % Matching

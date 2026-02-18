@@ -1,7 +1,7 @@
 %% SEGMENTAZIONE, NORMALIZZAZIONE ED ENCODING SU TUTTO IL DATASET
 clc; clear; close all;
 
-% --- MENU DI SCELTA METODO ---
+% Scelta del metodo
 choice = questdlg('Quale metodo di segmentazione vuoi usare?', ...
 	'Selezione Metodo', ...
 	'Hough', 'Daugman', 'Annulla', 'Hough');
@@ -26,7 +26,7 @@ w_out = 512;
 folderPath = uigetdir(pwd, 'Seleziona Cartella Dataset');
 if folderPath == 0, error('Annullato.'); end
 
-files = dir(fullfile(folderPath, '*.tiff')); 
+files = dir(fullfile(folderPath, '*.jpg')); 
 nFiles = length(files);
 if nFiles == 0, error('Nessuna immagine trovata.'); end
 
@@ -34,11 +34,11 @@ if nFiles == 0, error('Nessuna immagine trovata.'); end
 if SCELTA_METODO == 1
     nome_metodo = 'Hough';
 else
-    nome_metodo = 'ActiveContours';
+    nome_metodo = 'Daugman';
 end
 
-out_dir_img = fullfile(folderPath, 'Risultati_visivi');
-out_dir_data = fullfile(folderPath, 'Dati');
+out_dir_img = fullfile(folderPath, ['Risultati_visivi_' nome_metodo]);
+out_dir_data = fullfile(folderPath, ['Dati_' nome_metodo]);
 
 if ~exist(out_dir_img, 'dir'), mkdir(out_dir_img); end
 if ~exist(out_dir_data, 'dir'), mkdir(out_dir_data); end
@@ -65,22 +65,36 @@ img_gamma = imadjust(img_smooth, [0 1], [0.2 1], 1);
 img_enhanced = adapthisteq(img_gamma,'ClipLimit', 0.05 ,'Distribution', 'uniform', 'NumTiles', [6 6]);
 img_denoised = medfilt2(img_enhanced, [7 7]);
 
-% Calcolo ROI
-% Imposta il centro della ROI al centro esatto dell'immagine
+% Calcolo ROI (UBIRIS / CASIA) 
 [rows, cols] = size(img_red);
-y_center = rows/2;
-x_center = cols/2;
 
-box_width = 180;
-box_height = 160; 
+% Se l'immagine è larga meno di 400px, assumiamo sia CASIA e usiamo tutta
+% l'immagine, altrimenti assumiamo sia UBIRIS e usiamo la ROI.
 
-c_min = round(x_center - box_width/2); 
-r_min = round(y_center - box_height/2); 
-c_max = min(cols, c_min + box_width - 1);
-r_max = min(rows, r_min + box_height - 1);
+if cols < 400 
+    % CASIA
+    c_min = 1; 
+    r_min = 1;
+    box_width = cols; 
+    box_height = rows;
+    
+    img_roi_denoised = img_denoised; % Passiamo l'immagine intera
+    
+else
+    % UBIRIS
+    y_center = rows/2;
+    x_center = cols/2;
+    
+    box_width = 180;
+    box_height = 160; 
 
-% Estrazione ROI
-img_roi_denoised = img_denoised(r_min:r_max, c_min:c_max);
+    c_min = round(x_center - box_width/2); 
+    r_min = round(y_center - box_height/2); 
+    c_max = min(cols, c_min + box_width - 1);
+    r_max = min(rows, r_min + box_height - 1);
+    
+    img_roi_denoised = img_denoised(r_min:r_max, c_min:c_max);
+end
         
 % Chiamata funzione di segmentazione scelta
         if SCELTA_METODO == 1

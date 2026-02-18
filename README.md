@@ -1,20 +1,15 @@
-# Iris Recognition System
+# 👁️ Iris Recognition System (MATLAB)
 
-A complete biometric iris recognition pipeline implemented in MATLAB, based on **Hough transform and Daugman's algorithms**. 
+A complete biometric iris recognition pipeline implemented in MATLAB.
+This project explores the challenges of **visible wavelength (VW)** iris recognition versus **near-infrared (NIR)**, performing a comparative analysis between the **UBIRIS.v2** (noisy, visible) and **CASIA-Iris-Interval** (clean, NIR) datasets.
 
-This project processes eye images (specifically designed for the **UBIRIS v2** dataset), isolates the iris, extracts its unique textural features using 2D Gabor Wavelets, and performs identity verification via Hamming Distance matching.
-
-The system implements a classic biometric pipeline to translate these patterns into a digital code (**IrisCode**) for authentication purposes.
-
-The system is designed to handle noisy images (reflections, eyelashes, eyelids) typical of the UBIRIS dataset through advanced preprocessing and robust segmentation techniques.
-
----
+The system implements the classic **Daugman's Algorithm** pipeline, featuring robust segmentation (Hough & Integro-Differential), rubber sheet normalization, Gabor wavelet encoding, and Hamming Distance matching.
 
 ## 🗝️ Key Features
 
-* **Robust Preprocessing** 
-* **Hough Transform Segmentation:** Detects the pupil and iris boundaries using Circular Hough Transform with radius constraints.
-* **Daugman's Rubber Sheet Normalization:** Unwraps the circular iris region into a fixed-size rectangular block ($64 \times 512$) using polar coordinates, ensuring invariance to size and pupil dilation.
-* **Gabor Wavelet Encoding:** Extracts phase information using **2D Gabor Filters** (Real and Imaginary parts) to generate a binary feature template.
-* **Hamming Distance Matching:** Performs bitwise comparison (XOR) to calculate the dissimilarity score between subjects.
-* **Performance Analysis:** Includes tools to generate **Positive vs. Negative** histograms and calculate accuracy metrics.
+* **Dual Segmentation Strategy:**
+    * **Circular Hough Transform:** Optimized for robustness against impulsive noise (specular reflections).
+    * **Daugman's Integro-Differential Operator:** Implemented with adaptive parameters and inpainting for reflection handling.
+* **Adaptive Processing:** Automatically detects image characteristics (Macro vs Distance) to adjust ROI and search parameters dynamically.
+* **Feature Extraction:** 2D Gabor Wavelet encoding to generate binary **IrisCodes**.
+* **Matching:** Hamming Distance calculation with **Bit-Shifting** to compensate for head tilt/rotation.
