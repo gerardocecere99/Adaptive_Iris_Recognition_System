@@ -22,9 +22,6 @@ for k = 1:nFiles
     templates{k} = loaded.iris_code;
     names{k} = loaded.fname;
 
-    %% --- MODIFICA: ESTRAZIONE ID ROBUSTA ---
-    % Funziona sia per "C1_S1..." che per "001_1_1..."
-    % Estrae il primo gruppo di numeri trovato nel nome del file
     fname = files(k).name;
     
     % Usa espressione regolare per trovare cifre consecutive

@@ -26,7 +26,7 @@ w_out = 512;
 folderPath = uigetdir(pwd, 'Seleziona Cartella Dataset');
 if folderPath == 0, error('Annullato.'); end
 
-files = dir(fullfile(folderPath, '*.jpg')); 
+files = dir(fullfile(folderPath, '*.tiff')); 
 nFiles = length(files);
 if nFiles == 0, error('Nessuna immagine trovata.'); end
 
@@ -65,7 +65,8 @@ img_gamma = imadjust(img_smooth, [0 1], [0.2 1], 1);
 img_enhanced = adapthisteq(img_gamma,'ClipLimit', 0.05 ,'Distribution', 'uniform', 'NumTiles', [6 6]);
 img_denoised = medfilt2(img_enhanced, [7 7]);
 
-% Calcolo ROI (UBIRIS / CASIA) 
+%% CALCOLO ROI
+
 [rows, cols] = size(img_red);
 
 % Se l'immagine è larga meno di 400px, assumiamo sia CASIA e usiamo tutta
@@ -96,7 +97,8 @@ else
     img_roi_denoised = img_denoised(r_min:r_max, c_min:c_max);
 end
         
-% Chiamata funzione di segmentazione scelta
+%% CHIAMATA FUNZIONI
+
         if SCELTA_METODO == 1
             % Chiama la funzione Hough 
             [c_pupil, r_pupil, c_iris, r_iris] = segmentazione_hough(img_roi_denoised); 
@@ -113,7 +115,8 @@ c_iris_global = c_iris + [c_min-1, r_min-1];
 [img_norm] = normalizza_iride(img_red, c_pupil_global, r_pupil, c_iris_global, r_iris, h_out, w_out);
 iris_code = encode_iris(img_norm);
 
-% Visualizzazione immagini Segmentazione, Normalizzazione ed Encoding
+%% VISUALIZZAZIONE
+
 % Segmentazione
 f = figure('visible', 'off'); 
 subplot(3,1,1); imshow(img_red); hold on; title(fname, 'Interpreter', 'none');
