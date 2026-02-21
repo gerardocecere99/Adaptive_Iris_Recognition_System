@@ -107,7 +107,7 @@ end
             [c_pupil, r_pupil, c_iris, r_iris] = segmentazione_daugman(img_roi_denoised);
         end
 
-% Calcolo SNR sulla ROI (Valuta rumore sensore) 
+% 1. Calcolo SNR sulla ROI (Valuta rumore sensore) 
 metrica_snr = calcola_snr(img_roi_denoised);
 
 
@@ -146,7 +146,7 @@ axis on;
 saveas(f, fullfile(out_dir_img, ['Report_' fname '.jpg']));
 [~, nameNoExt, ~] = fileparts(fname);
 matFileName = fullfile(out_dir_data, [nameNoExt '.mat']);
-save(matFileName, 'iris_code', 'c_pupil_global', 'r_pupil', 'c_iris_global', 'r_iris', 'fname', 'metrica_snr');
+save(matFileName, 'iris_code', 'c_pupil_global', 'r_pupil', 'c_iris_global', 'r_iris', 'fname');
 close(f);
        
 end
