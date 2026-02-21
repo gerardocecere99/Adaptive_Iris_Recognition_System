@@ -26,7 +26,7 @@ w_out = 512;
 folderPath = uigetdir(pwd, 'Seleziona Cartella Dataset');
 if folderPath == 0, error('Annullato.'); end
 
-files = dir(fullfile(folderPath, '*.jpg')); 
+files = dir(fullfile(folderPath, '*.tiff')); 
 nFiles = length(files);
 if nFiles == 0, error('Nessuna immagine trovata.'); end
 
@@ -109,8 +109,6 @@ end
 
 % Calcolo SNR sulla ROI (Valuta rumore sensore) 
 metrica_snr = calcola_snr(img_roi_denoised);
-
-
 
 % Conversione coordinate        
 c_pupil_global = c_pupil + [c_min-1, r_min-1];
