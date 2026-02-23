@@ -26,7 +26,7 @@ w_out = 512;
 folderPath = uigetdir(pwd, 'Seleziona Cartella Dataset');
 if folderPath == 0, error('Annullato.'); end
 
-files = dir(fullfile(folderPath, '*.jpg')); 
+files = dir(fullfile(folderPath, '*.tiff')); 
 nFiles = length(files);
 if nFiles == 0, error('Nessuna immagine trovata.'); end
 
@@ -107,9 +107,9 @@ end
             [c_pupil, r_pupil, c_iris, r_iris] = segmentazione_daugman(img_roi_denoised);
         end
 
-% Calcolo SNR sulla ROI (Valuta rumore sensore) 
-metrica_snr = calcola_snr(img_roi_denoised);
 
+% 2. Calcolo Acutanza sul bordo dell'iride (Valuta nitidezza lenti/focus) [cite: 1211]
+acuity = calcola_acutanza_bordo(img_roi_denoised, [c_iris, r_iris], r_iris);
 
 
 % Conversione coordinate        
@@ -146,7 +146,7 @@ axis on;
 saveas(f, fullfile(out_dir_img, ['Report_' fname '.jpg']));
 [~, nameNoExt, ~] = fileparts(fname);
 matFileName = fullfile(out_dir_data, [nameNoExt '.mat']);
-save(matFileName, 'iris_code', 'c_pupil_global', 'r_pupil', 'c_iris_global', 'r_iris', 'fname', 'metrica_snr');
+save(matFileName, 'iris_code', 'c_pupil_global', 'r_pupil', 'c_iris_global', 'r_iris', 'fname', 'acuity');
 close(f);
        
 end
