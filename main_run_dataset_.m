@@ -108,10 +108,13 @@ end
         end
 
 
+<<<<<<< HEAD
 % 2. Calcolo Acutanza sul bordo dell'iride (Valuta nitidezza lenti/focus) [cite: 1211]
 acuity = calcola_acutanza_bordo(img_roi_denoised, [c_iris, r_iris], r_iris);
 
 
+=======
+>>>>>>> 4642c14a89d26526ab3e72b2c92848d93c83956f
 % Conversione coordinate        
 c_pupil_global = c_pupil + [c_min-1, r_min-1];
 c_iris_global = c_iris + [c_min-1, r_min-1];
