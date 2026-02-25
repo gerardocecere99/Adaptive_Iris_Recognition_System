@@ -72,7 +72,7 @@ h1 = histogram(scores_positivi, 20, 'Normalization', 'probability', 'FaceColor',
 h2 = histogram(scores_negativi, 20, 'Normalization', 'probability', 'FaceColor', 'r', 'FaceAlpha', 0.6);
 
 title('Distribuzione Hamming Distance');
-xlabel('Hamming Distance (0 = Identici, 0.5 = Diversi)');
+xlabel('Hamming Distance');
 ylabel('Probabilità');
 legend([h1, h2], {'Positivi (Stessa Persona)', 'Negativi (Persone Diverse)'});
 grid on;
