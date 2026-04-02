@@ -13,15 +13,15 @@ I_clean = imclose(I, se_fill);
     
     if cols > 200
         % Parametri CASIA
-        search_window = 40;     % Cerchiamo il centro in un'area ampia (+/- 40px)
-        pupil_rad_min = 25;     % Pupilla minima molto più grande
-        pupil_rad_max = 80;     % Pupilla massima enorme
+        search_window = 40;     
+        pupil_rad_min = 25;     % Pupilla minima
+        pupil_rad_max = 80;     % Pupilla massima
         iris_mult_min = 1.8;    % L'iride inizia a 1.8x la pupilla
         iris_mult_max = 3.5;    % L'iride finisce a 3.5x la pupilla
     else
         % Parametri UBIRIS
-        search_window = 10;     % Ricerca locale stretta (+/- 10px)
-        pupil_rad_min = 10;     % Pupilla standard piccola
+        search_window = 10;    
+        pupil_rad_min = 10;     
         pupil_rad_max = 35;     
         iris_mult_min = 1.5;    % Standard UBIRIS
         iris_mult_max = 4.2;
@@ -34,7 +34,7 @@ I_clean = imclose(I, se_fill);
     props = regionprops(bin_mask, 'Centroid', 'MajorAxisLength');
     
     if ~isempty(props)
-        % Prendi la regione più grande (probabile pupilla)
+        % Prende la regione più grande (probabile pupilla)
         [~, idx] = max([props.MajorAxisLength]);
         start_x = round(props(idx).Centroid(1));
         start_y = round(props(idx).Centroid(2));
@@ -43,11 +43,11 @@ I_clean = imclose(I, se_fill);
         start_y = round(rows/2);
     end
     
-    % Definizione Area di Ricerca Daugman (Usa search_window adattiva)
+    % Definizione Area di Ricerca Daugman (Usa search_window)
     rng_x = max(1, start_x-search_window) : min(cols, start_x+search_window);
     rng_y = max(1, start_y-search_window) : min(rows, start_y+search_window);
     
-    % Range Raggi Pupilla (Usa i parametri adattivi)
+    % Range Raggi Pupilla 
     rng_r = pupil_rad_min:2:pupil_rad_max; 
     
     % Esecuzione Operatore Daugman (Pupilla)
@@ -60,7 +60,7 @@ I_clean = imclose(I, se_fill);
     rng_x_i = round(c_pupil(1)-search_r_iris) : round(c_pupil(1)+search_r_iris);
     rng_y_i = round(c_pupil(2)-search_r_iris) : round(c_pupil(2)+search_r_iris);
     
-    % Range Raggi Iride (Calcolati con i moltiplicatori adattivi)
+    % Range Raggi Iride (Calcolati con i moltiplicatori)
     r_min_i = round(r_pupil * iris_mult_min);
     r_max_i = round(r_pupil * iris_mult_max);
     
@@ -68,7 +68,7 @@ I_clean = imclose(I, se_fill);
     max_radius_possible = min([rows/2, cols/2]) - 2;
     r_max_i = min(r_max_i, max_radius_possible);
     
-    % Correzione di sicurezza: se r_min > r_max, forza un range valido
+    % se r_min > r_max, forza un range valido
     if r_min_i >= r_max_i
         r_max_i = r_min_i + 15; 
     end

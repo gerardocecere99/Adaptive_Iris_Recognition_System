@@ -12,7 +12,7 @@ sigma_y = 0.5 * wavelength;
 % Matrice per il filtro di dimensioni sufficienti per contenere la campana di Gauss
 Msize = fix(4 * sigma_x); 
 % Se Msize > 31, il filtro supera i 63 pixel e legge zeri fuori dall'immagine.
-% Blocchiamo Msize a max 25 (filtro 51x51) o 30 (filtro 61x61).
+% Blocchiamo Msize
 if Msize > 28
     Msize = 28; % Valore di sicurezza
 end

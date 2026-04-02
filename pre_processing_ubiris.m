@@ -1,6 +1,6 @@
 clc; clear; close all;
 
-%% STEP 1: CARICAMENTO IMMAGINE E PRE PROCESSING
+%% CARICAMENTO IMMAGINE E PRE PROCESSING
 
 % Definizione manuale del file
 image = 'subdataset_ubiris_100\C1_S1_I1.tiff'; 
@@ -15,14 +15,17 @@ end
 % Filtraggio canale Rosso
 img_red = img_rgb(:,:,1); 
 
-% Correzione riflessi ed enhancement
+% Rimozione Riflessi 
 se_tophat = strel('disk', 20);
 img_tophat = imtophat(img_red, se_tophat);
 mask_riflessi = img_tophat > 35;
 img_smooth = regionfill(img_red, mask_riflessi);
-img_gamma = imadjust(img_smooth, [0 1], [0.2 1], 1);
-img_enhanced = adapthisteq(img_gamma,'ClipLimit', 0.05 ,'Distribution', 'uniform', 'NumTiles', [6 6]);
-img_denoised = medfilt2(img_enhanced, [7 7]);
+
+% CLAHE (Contrast Limited Adaptive Histogram Equalization)
+img_enhanced = adapthisteq(img_smooth, 'ClipLimit', 0.05, 'Distribution', 'uniform', 'NumTiles', [6 6]);
+
+% Filtro mediano
+img_denoised = medfilt2(img_enhanced, [3 3]); 
 
 % Visualizzazione grafica
 figure('Name', 'Pre processing');

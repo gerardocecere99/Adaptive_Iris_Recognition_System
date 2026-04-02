@@ -1,6 +1,7 @@
 %% SEGMENTAZIONE, NORMALIZZAZIONE ED ENCODING SU TUTTO IL DATASET
 clc; clear; close all;
 
+%%  SCELTA METODO SEGMENTAZIONE E CREAZIONE FOLDER DI DESTINAZIONE
 % Scelta del metodo
 choice = questdlg('Quale metodo di segmentazione vuoi usare?', ...
 	'Selezione Metodo', ...
@@ -52,18 +53,22 @@ for k = 1:nFiles
 
         waitbar(k/nFiles, hWait, sprintf('%d/%d: %s', k, nFiles));
         
+%% PRE-PROCESSING
 % Filtraggio canale Rosso
 img_rgb = imread(fullPath);
 img_red = img_rgb(:,:,1); 
 
-% Correzione riflessi ed enhancement
+% Rimozione Riflessi 
 se_tophat = strel('disk', 20);
 img_tophat = imtophat(img_red, se_tophat);
 mask_riflessi = img_tophat > 35;
 img_smooth = regionfill(img_red, mask_riflessi);
-img_gamma = imadjust(img_smooth, [0 1], [0.2 1], 1);
-img_enhanced = adapthisteq(img_gamma,'ClipLimit', 0.05 ,'Distribution', 'uniform', 'NumTiles', [6 6]);
-img_denoised = medfilt2(img_enhanced, [7 7]);
+
+% CLAHE (Contrast Limited Adaptive Histogram Equalization)
+img_enhanced = adapthisteq(img_smooth, 'ClipLimit', 0.05, 'Distribution', 'uniform', 'NumTiles', [6 6]);
+
+% Filtro mediano
+img_denoised = medfilt2(img_enhanced, [3 3]); 
 
 %% CALCOLO ROI
 
@@ -97,7 +102,7 @@ else
     img_roi_denoised = img_denoised(r_min:r_max, c_min:c_max);
 end
         
-%% CHIAMATA FUNZIONI
+%% CHIAMATA FUNZIONI 
 
         if SCELTA_METODO == 1
             % Chiama la funzione Hough 
@@ -107,7 +112,7 @@ end
             [c_pupil, r_pupil, c_iris, r_iris] = segmentazione_daugman(img_roi_denoised);
         end
 
-% 2. Calcolo Acutanza sul bordo dell'iride (Valuta nitidezza lenti/focus) [cite: 1211]
+% 2. Calcolo Acutanza sul bordo dell'iride
 acuity = calcola_acutanza_bordo(img_roi_denoised, [c_iris, r_iris], r_iris);
 
 % Conversione coordinate        

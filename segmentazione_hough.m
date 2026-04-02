@@ -6,17 +6,18 @@ function [c_pupil, r_pupil, c_iris, r_iris] = segmentazione_hough(img_roi_denois
     
     % Parametri dinamici
     % Se l'immagine in ingresso è larga > 200px, stiamo lavorando su CASIA (320px).
-    % Se è larga <= 200px, stiamo lavorando sul crop UBIRIS (180px).
+    % Se è larga <= 200px, stiamo lavorando su UBIRIS (180px).
+
     if cols > 200
         IS_CASIA = true;
-        % Parametri per occhi grandi
-        Rp_range = [30 80];        % Pupilla molto più grande
+        % Parametri per occhi più grandi (CASIA)
+        Rp_range = [30 80];        % Pupilla più grande
         Sens_pupil = 0.99;         % CASIA è molto netto, possiamo alzare la sensibilità
         R_iris_mult_min = 1.8;     % Moltiplicatori per iride
         R_iris_mult_max = 3.5;
     else
         IS_CASIA = false;
-        % Parametri per occhi piccoli
+        % Parametri per occhi più piccoli (UBIRIS)
         Rp_range = [8 25];
         Sens_pupil = 0.96;
         R_iris_mult_min = 1.5;
