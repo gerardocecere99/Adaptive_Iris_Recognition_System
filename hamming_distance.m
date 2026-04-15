@@ -1,17 +1,18 @@
 function score = hamming_distance(template1, template2)
 
 %% MATCHING TRA DUE IRIS_CODE CON SHIFTING (Compensazione Rotazione)
-
 % Configurazione shifting per spostamenti della testa
 shifts = -8:8; 
 
-% Inizializziamo il punteggio migliore con il valore peggiore possibile (1.0 = totalmente diversi).
+% Inizializziamo il punteggio migliore con il valore 
+% peggiore possibile (1.0 = totalmente diversi).
 best_score = 1.0;
 
 % 3. Normalizza
 total_bits = numel(template1);
 
-% Facciamo il confronto per ogni shift e teniamo il risultato migliore
+% Facciamo il confronto per ogni shift e teniamo il 
+% risultato migliore
 for s = shifts
     % Ruota il secondo template di 's' colonne
     % [0, s]: 0 shift verticale, s shift orizzontale
@@ -29,5 +30,4 @@ for s = shifts
     end
 end
 score = best_score;
-
 end

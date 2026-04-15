@@ -27,7 +27,7 @@ w_out = 512;
 folderPath = uigetdir(pwd, 'Seleziona Cartella Dataset');
 if folderPath == 0, error('Annullato.'); end
 
-files = dir(fullfile(folderPath, '*.tiff')); 
+files = dir(fullfile(folderPath, '*.jpg')); 
 nFiles = length(files);
 if nFiles == 0, error('Nessuna immagine trovata.'); end
 
@@ -79,11 +79,11 @@ img_denoised = medfilt2(img_enhanced, [3 3]);
 
 if cols < 400 
     % CASIA
-    c_min = 1; 
-    r_min = 1;
-    box_width = cols; 
-    box_height = rows;
-    
+    c_min=1;
+    r_min=1;
+    box_width= cols;
+    box_height=rows;
+
     img_roi_denoised = img_denoised; % Passiamo l'immagine intera
     
 else
@@ -109,11 +109,8 @@ end
             [c_pupil, r_pupil, c_iris, r_iris] = segmentazione_hough(img_roi_denoised); 
         else
             % Chiama la funzione Active
-            [c_pupil, r_pupil, c_iris, r_iris] = segmentazione_daugman(img_roi_denoised);
+            [c_pupil, r_pupil, c_iris, r_iris] = segmentazione_daugman_(img_roi_denoised);
         end
-
-% 2. Calcolo Acutanza sul bordo dell'iride
-acuity = calcola_acutanza_bordo(img_roi_denoised, [c_iris, r_iris], r_iris);
 
 % Conversione coordinate        
 c_pupil_global = c_pupil + [c_min-1, r_min-1];
@@ -149,7 +146,7 @@ axis on;
 saveas(f, fullfile(out_dir_img, ['Report_' fname '.jpg']));
 [~, nameNoExt, ~] = fileparts(fname);
 matFileName = fullfile(out_dir_data, [nameNoExt '.mat']);
-save(matFileName, 'iris_code', 'c_pupil_global', 'r_pupil', 'c_iris_global', 'r_iris', 'fname', 'acuity');
+save(matFileName, 'iris_code', 'c_pupil_global', 'r_pupil', 'c_iris_global', 'r_iris', 'fname');
 close(f);
        
 end
