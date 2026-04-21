@@ -1,6 +1,6 @@
-# 👁️ Adaptive Iris Recognition System
+# Adaptive Iris Recognition System
 
-## 📌 Project Overview
+## Project Overview
 This project implements an end-to-end adaptive biometric pipeline for **Iris Recognition**, developed in MATLAB. 
 The core objective is to analyze and compare the performance of classic iris recognition algorithms (based on John Daugman's principles) across two radically different environmental scenarios:
 1.  **Ideal Conditions (NIR):** Near-Infrared illumination, constrained environment (using the *CASIA-Iris-Interval* dataset).
@@ -26,10 +26,10 @@ The core objective is to analyze and compare the performance of classic iris rec
 * Calculation of the **Hamming Distance**.
 * **Rotational Compensation:** Implementation of a circular bit-shifting algorithm to compensate for head-tilt misalignments.
 
-## 📚 References
+## References
 * J. Daugman, *"How Iris Recognition Works"* (IEEE Transactions on Circuits and Systems for Video Technology, 2004).
 * M. Trokielewicz et al., *"Iris Recognition in Visible Light"* (Biometrics Laboratory, NASK).
 
-## 👨‍💻 Authors
+## Authors
 * **Gerardo Antonio Cecere**
 * **Veronica Loverre** 
