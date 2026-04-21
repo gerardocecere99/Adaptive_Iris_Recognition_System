@@ -88,7 +88,7 @@ function [c_pupil, r_pupil, c_iris, r_iris] = segmentazione_hough(img_roi_denois
     R_iris_min = round(r_pupil * R_iris_mult_min); 
     R_iris_max = round(r_pupil * R_iris_mult_max);
     
-    % Check di sicurezza per non crashare imfindcircles se i raggi sono assurdi
+    % Check di sicurezza per non crashare imfindcircles 
     if R_iris_max <= R_iris_min, R_iris_max = R_iris_min + 20; end
    
     img_iris = img_roi_denoised; 
